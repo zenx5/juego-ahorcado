@@ -1,44 +1,58 @@
 # Juego del ahorcado.
 
-print(" Bienvenido al juego del ahorcado ")
-palabra=input("La primera persona escribe la palabra: ")
+def check_letter(list_letter, letter):
+    list_index = []
+    if letter in list_letter:
+        for index in range( len(list_letter) ):
+            if( list_letter[index]==letter ):
+                list_index.append(index)
+    return list_index
 
-p_lista=list(palabra)
-largo=len(p_lista)
-for i in range(largo):
-    p_lista[i] = p_lista[i].lower()
-piso=[]
-intentos=10
-for i in range(largo):
-    piso.append("_")
-marcador=True
+def get_word():
+    return input("La primera persona escribe la palabra: ")
 
-while marcador:
-    print(piso)
-    letra=input("Diga una letra: ")
+def start_game(p_lista, intentos):
+    marcador=True
+    piso=[]
 
-    if letra not in p_lista:
-        print("La letra no esta")
-        intentos-=1
+    for i in range( len(p_lista) ):
+        p_lista[i] = p_lista[i].lower()
+        piso.append("_")
+
+    while marcador:
+        print(piso)
+        letra=input("Diga una letra: ")
+        indexes = check_letter(p_lista, letra)
+        if len(indexes)==0:
+            intentos-=1
+        else:
+            for index in indexes:
+                piso[index] = letra
+        print(f"intentos: ${intentos}")
+
         if intentos==0:
-            print("Juego perdido")
-            break
+            marcador = False
         else:
             print(f"Le quedan {intentos} intentos")
-            continue
-    else:
-        for i in range(largo):
-            if p_lista[i]==letra:
-                piso[i]=letra
-        
-        
-        if "_" in piso:
-            continue
-        else:
-            print("Juego ganado ")
+
+        if "_" not in piso:
+            marcador = True
             break
 
+    return marcador
 
 
-        
+def main(intentos):
+    print(" Bienvenido al juego del ahorcado ")
+    word = get_word()
+    p_lista=list(word)
+
+    if( start_game(p_lista, intentos) ):
+        print(f"Juego ganado, la palabra es {word}")
+    else:
+        print("Juego perdido")
+
+
+main(3)
+
 
